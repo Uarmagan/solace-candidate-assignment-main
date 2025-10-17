@@ -32,7 +32,8 @@ export default function Home() {
         advocate.degree.toLowerCase().includes(searchLower) ||
         advocate.specialties.some((specialty) =>
           specialty.toLowerCase().includes(searchLower)) ||
-        advocate.yearsOfExperience.toString().includes(searchTerm)
+        advocate.yearsOfExperience.toString().includes(searchTerm) ||
+        advocate.phoneNumber.toString().includes(searchTerm)
       );
     });
 
