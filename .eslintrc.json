@@ -1,3 +1,7 @@
 {
+  "rules": {
+    "quotes": ["warn", "single", { "avoidEscape": true }],
+    "jsxSingleQuote": true
+  },
   "extends": ["next/core-web-vitals", "plugin:prettier/recommended"]
 }
