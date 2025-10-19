@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Advocate } from "@/types/advocate"; 
+import { Advocate } from "@/types/advocate";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -21,7 +21,6 @@ export default function Home() {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
 
-
     console.log("filtering advocates...");
     const filteredAdvocates = advocates.filter((advocate) => {
       const searchLower = searchTerm.toLowerCase();
@@ -31,7 +30,8 @@ export default function Home() {
         advocate.city.toLowerCase().includes(searchLower) ||
         advocate.degree.toLowerCase().includes(searchLower) ||
         advocate.specialties.some((specialty) =>
-          specialty.toLowerCase().includes(searchLower)) ||
+          specialty.toLowerCase().includes(searchLower),
+        ) ||
         advocate.yearsOfExperience.toString().includes(searchTerm) ||
         advocate.phoneNumber.toString().includes(searchTerm)
       );
