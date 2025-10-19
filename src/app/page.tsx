@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Advocate } from "@/types/advocate"; 
+import { Advocate } from "@/types/advocate";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -22,7 +22,6 @@ export default function Home() {
     const nextSearchTerm = e.target.value;
     setSearchTerm(nextSearchTerm);
 
-
     console.log("filtering advocates...");
     const filteredAdvocates = advocates.filter((advocate) => {
       const searchLower = nextSearchTerm.toLowerCase();
@@ -32,9 +31,10 @@ export default function Home() {
         advocate.city.toLowerCase().includes(searchLower) ||
         advocate.degree.toLowerCase().includes(searchLower) ||
         advocate.specialties.some((specialty) =>
-          specialty.toLowerCase().includes(searchLower)) ||
-      advocate.yearsOfExperience.toString().includes(nextSearchTerm) ||
-      advocate.phoneNumber.toString().includes(nextSearchTerm)
+          specialty.toLowerCase().includes(searchLower),
+        ) ||
+        advocate.yearsOfExperience.toString().includes(nextSearchTerm) ||
+        advocate.phoneNumber.toString().includes(nextSearchTerm)
       );
     });
 
@@ -57,7 +57,7 @@ export default function Home() {
           Searching for: <span id="search-term">{searchTerm}</span>
         </p>
         <input
-          style={{ border: "1px ssolid black" }}
+          style={{ border: "1px solid black" }}
           value={searchTerm}
           onChange={onChange}
         />
