@@ -1,63 +1,73 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Advocate } from "@/types/advocate";
+import dynamic from 'next/dynamic';
+import {
+  Suspense,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { Advocate } from '@/types/advocate';
+
+const AdvocateResults = dynamic(() => import('./advocate-results'), {
+  suspense: true,
+});
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
-  const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   useEffect(() => {
-    console.log("fetching advocates...");
-    fetch("/api/advocates").then((response) => {
+    console.log('fetching advocates...');
+    fetch('/api/advocates').then((response) => {
       response.json().then((jsonResponse) => {
         setAdvocates(jsonResponse.data);
-        setFilteredAdvocates(jsonResponse.data);
       });
     });
   }, []);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nextSearchTerm = e.target.value;
-    setSearchTerm(nextSearchTerm);
+    setSearchTerm(e.target.value);
+  };
 
-    console.log("filtering advocates...");
-    const filteredAdvocates = advocates.filter((advocate) => {
-      const searchLower = nextSearchTerm.toLowerCase();
+  const resetSearch = () => {
+    setSearchTerm('');
+  };
+
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+
+  const filteredAdvocates = useMemo(() => {
+    console.log('filtering advocates...');
+    const searchLower = deferredSearchTerm.toLowerCase();
+
+    return advocates.filter((advocate) => {
       return (
         advocate.firstName.toLowerCase().includes(searchLower) ||
         advocate.lastName.toLowerCase().includes(searchLower) ||
         advocate.city.toLowerCase().includes(searchLower) ||
         advocate.degree.toLowerCase().includes(searchLower) ||
         advocate.specialties.some((specialty) =>
-          specialty.toLowerCase().includes(searchLower),
+          specialty.toLowerCase().includes(searchLower)
         ) ||
-        advocate.yearsOfExperience.toString().includes(nextSearchTerm) ||
-        advocate.phoneNumber.toString().includes(nextSearchTerm)
+        advocate.yearsOfExperience.toString().includes(deferredSearchTerm) ||
+        advocate.phoneNumber.toString().includes(deferredSearchTerm)
       );
     });
-
-    setFilteredAdvocates(filteredAdvocates);
-  };
-
-  const resetSearch = () => {
-    setSearchTerm("");
-    setFilteredAdvocates(advocates);
-  };
+  }, [advocates, deferredSearchTerm]);
 
   return (
-    <main className="container mx-auto px-4 py-8">
+    <main className='container mx-auto px-4 py-8'>
       <h1>Solace Advocates</h1>
       <br />
       <br />
       <div>
         <p>Search</p>
         <p>
-          Searching for: <span id="search-term">{searchTerm}</span>
+          Searching for: <span id='search-term'>{searchTerm}</span>
         </p>
         <input
-          style={{ border: "1px solid black" }}
+          style={{ border: '1px solid black' }}
           value={searchTerm}
           onChange={onChange}
         />
@@ -65,38 +75,9 @@ export default function Home() {
       </div>
       <br />
       <br />
-      <table>
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>City</th>
-            <th>Degree</th>
-            <th>Specialties</th>
-            <th>Years of Experience</th>
-            <th>Phone Number</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredAdvocates.map((advocate) => {
-            return (
-              <tr key={advocate.id}>
-                <td>{advocate.firstName}</td>
-                <td>{advocate.lastName}</td>
-                <td>{advocate.city}</td>
-                <td>{advocate.degree}</td>
-                <td>
-                  {advocate.specialties.map((s, index) => (
-                    <div key={index}>{s}</div>
-                  ))}
-                </td>
-                <td>{advocate.yearsOfExperience}</td>
-                <td>{advocate.phoneNumber}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <Suspense fallback={<div>Loading results...</div>}>
+        <AdvocateResults advocates={filteredAdvocates} />
+      </Suspense>
     </main>
   );
 }
