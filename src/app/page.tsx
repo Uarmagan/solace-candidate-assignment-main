@@ -19,12 +19,13 @@ export default function Home() {
   }, []);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+    const nextSearchTerm = e.target.value;
+    setSearchTerm(nextSearchTerm);
 
 
     console.log("filtering advocates...");
     const filteredAdvocates = advocates.filter((advocate) => {
-      const searchLower = searchTerm.toLowerCase();
+      const searchLower = nextSearchTerm.toLowerCase();
       return (
         advocate.firstName.toLowerCase().includes(searchLower) ||
         advocate.lastName.toLowerCase().includes(searchLower) ||
@@ -32,31 +33,35 @@ export default function Home() {
         advocate.degree.toLowerCase().includes(searchLower) ||
         advocate.specialties.some((specialty) =>
           specialty.toLowerCase().includes(searchLower)) ||
-        advocate.yearsOfExperience.toString().includes(searchTerm) ||
-        advocate.phoneNumber.toString().includes(searchTerm)
+      advocate.yearsOfExperience.toString().includes(nextSearchTerm) ||
+      advocate.phoneNumber.toString().includes(nextSearchTerm)
       );
     });
 
     setFilteredAdvocates(filteredAdvocates);
   };
 
-  const onClick = () => {
-    console.log(advocates);
+  const resetSearch = () => {
+    setSearchTerm("");
     setFilteredAdvocates(advocates);
   };
 
   return (
-    <main style={{ margin: "24px" }}>
+    <main className="container mx-auto px-4 py-8">
       <h1>Solace Advocates</h1>
       <br />
       <br />
       <div>
         <p>Search</p>
         <p>
-          Searching for: <span id="search-term"></span>
+          Searching for: <span id="search-term">{searchTerm}</span>
         </p>
-        <input style={{ border: "1px solid black" }} onChange={onChange} />
-        <button onClick={onClick}>Reset Search</button>
+        <input
+          style={{ border: "1px ssolid black" }}
+          value={searchTerm}
+          onChange={onChange}
+        />
+        <button onClick={resetSearch}>Reset Search</button>
       </div>
       <br />
       <br />
