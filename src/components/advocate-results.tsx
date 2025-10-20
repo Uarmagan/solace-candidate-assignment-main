@@ -90,8 +90,8 @@ export default function AdvocateResults({
               <td>{advocate.city}</td>
               <td>{advocate.degree}</td>
               <td>
-                {advocate.specialties.map((specialty, index) => (
-                  <div key={index}>{specialty}</div>
+                {advocate.specialties.map((specialty) => (
+                  <div key={`${advocate.id}-${specialty}`}>{specialty}</div>
                 ))}
               </td>
               <td>{advocate.yearsOfExperience}</td>
