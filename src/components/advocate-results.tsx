@@ -2,6 +2,14 @@
 
 import { ReactNode, useDeferredValue, useMemo } from 'react';
 import { useAdvocatesQuery } from '@/hooks/use-advocates-query';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 const COLUMN_COUNT = 7;
 
@@ -12,9 +20,11 @@ const STATUS_MESSAGES = {
 
 function StatusRow({ children }: { children: ReactNode }) {
   return (
-    <tr>
-      <td colSpan={COLUMN_COUNT}>{children}</td>
-    </tr>
+    <TableRow>
+      <TableCell colSpan={COLUMN_COUNT} className="text-center py-8">
+        {children}
+      </TableCell>
+    </TableRow>
   );
 }
 
@@ -54,25 +64,25 @@ export default function AdvocateResults({
   const hasResults = filteredAdvocates.length > 0;
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>City</th>
-          <th>Degree</th>
-          <th>Specialties</th>
-          <th>Years of Experience</th>
-          <th>Phone Number</th>
-        </tr>
-      </thead>
-      <tbody>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>First Name</TableHead>
+          <TableHead>Last Name</TableHead>
+          <TableHead>City</TableHead>
+          <TableHead>Degree</TableHead>
+          <TableHead>Specialties</TableHead>
+          <TableHead>Years of Experience</TableHead>
+          <TableHead>Phone Number</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
         {isPending && <StatusRow>{STATUS_MESSAGES.loading}</StatusRow>}
         {isError && (
           <StatusRow>
             Failed to load advocates: {error?.message ?? 'Unknown error'}{' '}
             <button
-              className="bg-blue-500 text-white p-1 rounded-md"
+              className="bg-blue-500 text-white p-1 rounded-md hover:bg-blue-600 transition-colors"
               type="button"
               onClick={() => refetch()}
             >
@@ -84,24 +94,24 @@ export default function AdvocateResults({
           !isError &&
           hasResults &&
           filteredAdvocates.map((advocate) => (
-            <tr key={advocate.id}>
-              <td>{advocate.firstName}</td>
-              <td>{advocate.lastName}</td>
-              <td>{advocate.city}</td>
-              <td>{advocate.degree}</td>
-              <td>
+            <TableRow key={advocate.id}>
+              <TableCell>{advocate.firstName}</TableCell>
+              <TableCell>{advocate.lastName}</TableCell>
+              <TableCell>{advocate.city}</TableCell>
+              <TableCell>{advocate.degree}</TableCell>
+              <TableCell>
                 {advocate.specialties.map((specialty) => (
                   <div key={`${advocate.id}-${specialty}`}>{specialty}</div>
                 ))}
-              </td>
-              <td>{advocate.yearsOfExperience}</td>
-              <td>{advocate.phoneNumber}</td>
-            </tr>
+              </TableCell>
+              <TableCell>{advocate.yearsOfExperience}</TableCell>
+              <TableCell>{advocate.phoneNumber}</TableCell>
+            </TableRow>
           ))}
         {!isPending && !isError && !hasResults && (
           <StatusRow>{STATUS_MESSAGES.empty}</StatusRow>
         )}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 }
