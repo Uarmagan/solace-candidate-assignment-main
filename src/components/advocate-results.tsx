@@ -72,8 +72,8 @@ export default function AdvocateResults({
           <StatusRow>
             Failed to load advocates: {error?.message ?? 'Unknown error'}{' '}
             <button
-              className='bg-blue-500 text-white p-1 rounded-md'
-              type='button'
+              className="bg-blue-500 text-white p-1 rounded-md"
+              type="button"
               onClick={() => refetch()}
             >
               Retry
