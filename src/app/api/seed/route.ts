@@ -1,6 +1,6 @@
-import { advocates } from "../../../db/schema";
-import { advocateData } from "../../../db/seed/advocates";
-import { getDb } from "../../../db";
+import { advocates } from '../../../db/schema';
+import { advocateData } from '../../../db/seed/advocates';
+import { getDb } from '../../../db';
 
 export async function POST() {
   const db = getDb();
