@@ -1,7 +1,7 @@
 'use client';
 
 import { MoonStar, Sun } from 'lucide-react';
-import { useTheme } from './theme-provider';
+import { useTheme } from '@/providers/theme-provider';
 import { Button } from './ui/button';
 
 export function ThemeToggle() {
